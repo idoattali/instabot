@@ -38,7 +38,7 @@ class InstagramBot(object):
                     self._logger.info("Looking for new users in current media list")
                     #media_list = MediaFilter.basic_remove_tags(media_list)
                     #media_list = MediaFilter.get_only_low_text(media_list)
-                    self._logger.info(MediaFilter.standart_best_media(media_list[:10]))
+                    media_list = MediaFilter.standart_best_media(media_list[:10])
                     if len(media_list) > 0:
                         self._logger.info("Found {0} users to use.".format(len(media_list)))
                     else:
