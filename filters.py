@@ -1,6 +1,9 @@
 import time
+import logging
 
 from profile_page import ProfilePage
+
+logger = logging.getLogger('instabot')
 
 class MediaFilter(object):
     @staticmethod
@@ -44,7 +47,7 @@ class MediaFilter(object):
             except Exception:
                 pass
 
-        print "Found user with {0} following".format(best_score)
+        logger.info("Found user with {0} following".format(best_score))
         return best_medias
 
     @staticmethod
