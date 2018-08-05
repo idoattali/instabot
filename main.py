@@ -28,7 +28,8 @@ def main():
         username=user_conf.get('username'),
         password=user_conf.get('password'),
         session_id=user_conf.get('session_id'),
-        tags=user_conf.get('tags')
+        tags=user_conf.get('tags'),
+        like_sleep=user_conf.get('like_sleep')
     )
 
     bot.run()

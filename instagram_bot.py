@@ -8,7 +8,7 @@ from filters import MediaFilter
 import time
 
 class InstagramBot(object):
-    def __init__(self, username, password, session_id=None, tags=[]):
+    def __init__(self, username, password, session_id=None, tags=[], like_sleep=50):
         self._session = InstagramSession()
 
         self._session.get_main_page()
@@ -21,6 +21,7 @@ class InstagramBot(object):
         self._username = username
         self._tags = [TagPage(tag) for tag in tags]
         self._logger = logging.getLogger('instabot')
+        self._like_sleep = like_sleep
 
     def run(self):
         x = 1
@@ -56,8 +57,8 @@ class InstagramBot(object):
 
                         time_diff = datetime.now() - last_like
                         seconds_diff = time_diff.total_seconds()
-                        if seconds_diff < 50:
-                            to_wait = 50 - seconds_diff
+                        if seconds_diff < self._like_sleep:
+                            to_wait = self._like_sleep - seconds_diff
                             self._logger.info('Sleeping for {0} seconds'.format(to_wait))
                             time.sleep(to_wait)
                             self._logger.info("Finished wait, go to like.")
