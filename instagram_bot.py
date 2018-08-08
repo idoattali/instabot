@@ -8,7 +8,7 @@ from filters import MediaFilter
 import time
 
 class InstagramBot(object):
-    def __init__(self, username, password, session_id=None, tags=[], like_sleep=50):
+    def __init__(self, username, password, session_id=None, tags=[], like_sleep=50, plan="regular"):
         self._session = InstagramSession()
 
         self._session.get_main_page()
@@ -22,6 +22,21 @@ class InstagramBot(object):
         self._tags = [TagPage(tag) for tag in tags]
         self._logger = logging.getLogger('instabot')
         self._like_sleep = like_sleep
+        self._plan = plan
+
+    def _filter_by_plan(self, medias):
+        if "follow_ratio" in self._plan:
+            self._logger.info("Looking for new users in current media list")
+            media_list = MediaFilter.standart_best_media(medias[:10])
+            if len(media_list) > 0:
+                self._logger.info("Found {0} users to use.".format(len(media_list)))
+            else:
+                self._logger.info("Cannot find users, probably there are no users who pass the filter.")
+            return media_list
+        if "dummy" in self._plan:
+            self._logger.info("Choose the first media by \"dummy\" decision")
+            return [medias[0]]
+        self._logger.error("No plan!")
 
     def run(self):
         x = 1
@@ -36,14 +51,7 @@ class InstagramBot(object):
                     media_list = tag.get_media_list()
                     self._logger.info("Tag currently has {0} medias".format(len(media_list)))
 
-                    self._logger.info("Looking for new users in current media list")
-                    #media_list = MediaFilter.basic_remove_tags(media_list)
-                    #media_list = MediaFilter.get_only_low_text(media_list)
-                    media_list = MediaFilter.standart_best_media(media_list[:10])
-                    if len(media_list) > 0:
-                        self._logger.info("Found {0} users to use.".format(len(media_list)))
-                    else:
-                        self._logger.info("Cannot find users, probably there are no users who pass the filter.")
+                    media_list = self._filter_by_plan(media_list)
 
                     tag_page = self._session.get_tag_page(tag.get_name())
                     time.sleep(2)
