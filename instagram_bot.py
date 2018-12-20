@@ -16,6 +16,7 @@ class InstagramBot(object):
             self._session.login_using_session(session_id)
         else:
             self._session.login(username, password)
+
         self._session.get_main_page()
 
         self._username = username
@@ -36,6 +37,7 @@ class InstagramBot(object):
         if "dummy" in self._plan:
             self._logger.info("Choose the first media by \"dummy\" decision")
             return [medias[0]]
+        return medias
         self._logger.error("No plan!")
 
     def run(self):
@@ -47,7 +49,7 @@ class InstagramBot(object):
                 try:
                     self._logger.info("--------------------------------------------------------------------------")
                     self._logger.info("Updating  and fetching media from tag '{0}'...".format(tag.get_name()))
-                    tag.update_last_media()
+                    tag.update_last_media(self._session.get_tag_json(tag.get_name()))
                     media_list = tag.get_media_list()
                     self._logger.info("Tag currently has {0} medias".format(len(media_list)))
 
