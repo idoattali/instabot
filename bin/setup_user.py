@@ -2,8 +2,8 @@ import os
 import time
 from optparse import OptionParser
 
-from utils.instagram_session import InstagramSession
-from utils.misc import create_logger, load_config, Struct, StoreAccount
+from instabot.utils.instagram_session import InstagramSession
+from instabot.utils.misc import create_logger, load_config, Struct, StoreAccount
 
 
 def main():

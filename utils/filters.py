@@ -1,7 +1,7 @@
 import time
 import logging
 
-from utils.profile_page import ProfilePage
+from instabot.utils.profile_page import ProfilePage
 logger = logging.getLogger('instabot')
 
 

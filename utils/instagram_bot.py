@@ -3,9 +3,9 @@ import time
 
 from datetime import datetime
 
-from utils.instagram_session import InstagramSession
-from utils.tag_page import TagPage
-from utils.filters import MediaFilter
+from instabot.utils.instagram_session import InstagramSession
+from instabot.utils.tag_page import TagPage
+from instabot.utils.filters import MediaFilter
 
 
 class InstagramBot(object):

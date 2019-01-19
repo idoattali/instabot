@@ -1,10 +1,9 @@
 import json
-import logging
 
 from optparse import OptionParser
 
-from utils.instagram_bot import InstagramBot
-from utils.misc import create_logger
+from instabot.utils.instagram_bot import InstagramBot
+from instabot.utils.misc import create_logger
 
 
 def load_config(conf_file):
