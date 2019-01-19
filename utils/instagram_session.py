@@ -1,8 +1,12 @@
 import requests
 import os
 import json
+import time
+
+from requests_toolbelt import MultipartEncoder
 
 requests.packages.urllib3.disable_warnings()
+
 
 class InstagramSession(object):
     def __init__(self):
@@ -20,6 +24,15 @@ class InstagramSession(object):
             'Content-Type': 'application/x-www-form-urlencoded',
             'X-Requested-With': 'XMLHttpRequest'
         })
+
+    def full_login(self, username, password, session_id=None):
+        self.get_main_page()
+        if session_id:
+            self.login_using_session(session_id)
+        else:
+            self.login(username, password)
+        self.get_main_page()
+        self.get_profile_page(username)
 
     def get_main_page(self):
         main_page = self._session.get('https://instagram.com/', verify=False)
@@ -84,11 +97,87 @@ class InstagramSession(object):
     def get_tag_json(self, tag):
         tag_json_bae_url = 'https://www.instagram.com/graphql/query/?query_hash=ded47faa9a1aaded10161a2ff32abb6b&variables=%7B%22tag_name%22%3A%22{0}%22%2C%22first%22%3A6%7D'
         tag_json_url = tag_json_bae_url.format(tag)
-        tag_json = self._session.get(tag_json_url, verify = False)
+        tag_json = self._session.get(tag_json_url, verify=False)
         return json.loads(tag_json.content)
 
     def get_profile_page(self, username):
+        profile_json_url_format = 'https://instagram.com/{0}'
+        profile_json_url = profile_json_url_format.format(username)
+        profile = self._session.get(profile_json_url, verify=False)
+        return profile
+
+    def get_profile_info(self, username):
         profile_json_url_format = 'https://instagram.com/{0}/?__a=1'
         profile_json_url = profile_json_url_format.format(username)
-        profile = self._session.get(profile_json_url, verify = False)
+        profile = self._session.get(profile_json_url, verify=False)
         return profile
+
+    def edit_account(self, username, display_name, bio, website, phone_number, email):
+        edit_account_url = 'https://instagram.com/accounts/edit/'
+        data = {
+            'first_name': display_name,
+            'email': email,
+            'username': username,
+            'phone_number': phone_number,
+            'gender': '3',
+            'biography': bio,
+            'external_url': website,
+            'chaining_enabled': 'on'
+        }
+        response = self._session.post(edit_account_url, data=data, verify=False)
+        return response
+
+    def upload_profile_picture(self, picture_bin, content_length):
+        m = MultipartEncoder(
+            fields={'profile_pic': ('profilepic.jpg', picture_bin, 'image/png')},
+            boundary='----WebKitFormBoundaryx6wIh7mzMqDpTWZU'
+        )
+        new_h = self._session.headers.copy()
+        new_h['Content-Type'] = m.content_type
+        new_h['Content-Length'] = content_length
+        upload_profile_url = 'https://www.instagram.com/accounts/web_change_profile_picture/'
+
+        res = self._session.post(upload_profile_url, data=m, headers=new_h)
+
+        if res.status_code == 200:
+            return json.loads(res.content).get('has_profile_pic')
+
+        return False
+
+    def upload_post(self, picture_bin, content_length, caption):
+        upload_id = self._upload_photo(picture_bin, content_length)
+        self._configure_photo(upload_id, caption)
+
+    def _upload_photo(self, picture_bin, content_length):
+        m = MultipartEncoder(
+            fields={
+                'upload_id': (str(time.time()).replace('.', '')),
+                'photo': ('photo.jpg', picture_bin, 'image/png'),
+                'media_type': '1'
+            },
+            boundary='----WebKitFormBoundaryx6wIh7mzMqDpTWZU'
+        )
+        new_h = self._session.headers.copy()
+        new_h['Content-Type'] = m.content_type
+        new_h['Content-Length'] = content_length
+        upload_profile_url = 'https://www.instagram.com/create/upload/photo/'
+
+        res = self._session.post(upload_profile_url, data=m, headers=new_h)
+
+        if res.status_code == 200:
+            return json.loads(res.content).get('upload_id', -1)
+
+        return -1
+
+    def _configure_photo(self, upload_id, caption):
+        configure_photo_url = 'https://instagram.com/create/configure/'
+        data = {
+            'upload_id': upload_id,
+            'caption': caption,
+            'usertags': '',
+            'custom_accessibility_caption': '',
+            'retry_timeout': ''
+        }
+
+        response = self._session.post(configure_photo_url, data=data, verify=False)
+        return response

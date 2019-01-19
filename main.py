@@ -3,24 +3,18 @@ import logging
 
 from optparse import OptionParser
 
-from instagram_bot import InstagramBot
+from utils.instagram_bot import InstagramBot
+from utils.misc import create_logger
+
 
 def load_config(conf_file):
     with open(conf_file, 'r') as f:
         conf_text = f.read()
     return json.loads(conf_text)
 
-def create_logger(log_path):
-    logger = logging.getLogger('instabot')
-    logger.setLevel(logging.DEBUG)
-    fh = logging.FileHandler(log_path)
-    fh.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
 
 def main():
-    options, args = getopt()
+    options, args = get_opt()
     user_conf = load_config(options.file)
     create_logger(options.log)
 
@@ -34,11 +28,13 @@ def main():
 
     bot.run()
 
-def getopt():
+
+def get_opt():
     parser = OptionParser()
     parser.add_option('-f', '--file', type='string')
     parser.add_option('-l', '--log', type='string')
     return parser.parse_args()
+
 
 if __name__ == '__main__':
     main()

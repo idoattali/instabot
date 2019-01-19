@@ -1,23 +1,18 @@
 import logging
+import time
 
 from datetime import datetime
 
-from instagram_session import InstagramSession
-from tag_page import TagPage
-from filters import MediaFilter
-import time
+from utils.instagram_session import InstagramSession
+from utils.tag_page import TagPage
+from utils.filters import MediaFilter
+
 
 class InstagramBot(object):
     def __init__(self, username, password, session_id=None, tags=[], like_sleep=50, plan="regular"):
         self._session = InstagramSession()
 
-        self._session.get_main_page()
-        if session_id:
-            self._session.login_using_session(session_id)
-        else:
-            self._session.login(username, password)
-
-        self._session.get_main_page()
+        self._session.full_login(username, password, session_id)
 
         self._username = username
         self._tags = [TagPage(tag) for tag in tags]
@@ -38,7 +33,6 @@ class InstagramBot(object):
             self._logger.info("Choose the first media by \"dummy\" decision")
             return [medias[0]]
         return medias
-        self._logger.error("No plan!")
 
     def run(self):
         x = 1
