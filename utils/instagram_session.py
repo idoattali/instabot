@@ -95,7 +95,7 @@ class InstagramSession(object):
             pass
 
     def get_tag_json(self, tag):
-        tag_json_bae_url = 'https://www.instagram.com/graphql/query/?query_hash=ded47faa9a1aaded10161a2ff32abb6b&variables=%7B%22tag_name%22%3A%22{0}%22%2C%22first%22%3A6%7D'
+        tag_json_bae_url = 'https://www.instagram.com/graphql/query/?query_hash=f92f56d47dc7a55b606908374b43a314&variables=%7B%22tag_name%22%3A%22{0}%22%2C%22show_ranked%22%3Afalse%2C%22first%22%3A6%7D'
         tag_json_url = tag_json_bae_url.format(tag)
         tag_json = self._session.get(tag_json_url, verify=False)
         return json.loads(tag_json.content)

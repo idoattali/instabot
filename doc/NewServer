@@ -1,0 +1,23 @@
+# Create a new server at AWS.
+
+# Git installation
+sudo apt update
+sudo apt install git
+
+# Clone repository
+cd ~
+git clone https://github.com/idoattali/instabot.git instabot
+
+# Python installation
+sudo apt install python2.7 python-pip
+
+# Dependencies install
+pip install requests requests-toolbelt
+
+# Proxy installation
+sudo apt install tinyproxy
+sudo vim /etc/tinyproxy/tinyproxy.conf
+# Inside the vim
+    /Allow # until you get to Allow 127.0.0.1
+    # Change it to Allow 0.0.0.0/0
+sudo service tinyproxy restart
