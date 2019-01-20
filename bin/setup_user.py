@@ -42,7 +42,7 @@ def main():
                                str(os.path.getsize(picture)),
                                store_account.post_caption)
         logger.info('Finished uploading, wait for 2 minutes')
-        time.sleep(120)
+        time.sleep(60*30)
 
     logger.info('Done')
 
