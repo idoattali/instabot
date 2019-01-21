@@ -25,7 +25,7 @@ def main():
         store_account.email
     )
     logger.info('Finished edit, wait for 5 seconds')
-    time.sleep(5)
+    time.sleep(60)
 
     logger.info('Upload new profile picture...')
     ig_session.upload_profile_picture(
@@ -33,7 +33,7 @@ def main():
         str(os.path.getsize(store_account.profile_picture))
     )
     logger.info('Finished upload profile picture, wait for 10 seconds')
-    time.sleep(10)
+    time.sleep(120)
 
     logger.info('Start upload posts, wait 2 minute between posts')
     for picture in store_account.pictures:
