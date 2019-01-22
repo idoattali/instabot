@@ -34,5 +34,5 @@ http.setRequestHeader('x-instagram-ajax', '6dd8258a1c04');
 http.setRequestHeader('x-requested-with', 'XMLHttpRequest');
 
 http.send(params); }
-await sleep(5000);
+await sleep(15000);
 }
